@@ -1,2 +1,0 @@
-# Buymeacoffee
-full-stack project
