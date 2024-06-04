@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMugHot } from "@fortawesome/free-solid-svg-icons";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +19,30 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <header className="mb-16">
+          <div className="flex justify-between max-w-2xl mx-auto px-4 py-4">
+          <Link href={"/"} className="inline-flex gap-1 items-center">
+            <FontAwesomeIcon className="h-8" icon={faMugHot}/>
+            <span className="mt-2 ">Buy me a coffee</span>
+          </Link>
+          <nav className="mt-2 flex gap-6 items-center">
+            <Link href="/about">About</Link>
+            <Link href="/faq">FAQ</Link>
+            <Link href="/contact">Contact</Link>
+            <div className="flex gap-4"> 
+            <button className= "border-2 rounded-full px-4 py-2 ml-4">
+              Login
+            </button>
+            <button className="bg-yellow-300 rounded-full px-4 py-2">
+              Sign up
+            </button>
+            </div>
+          </nav>
+          </div>
+        </header>
+        {children}
+      </body>
     </html>
   );
 }
