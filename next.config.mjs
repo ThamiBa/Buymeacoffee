@@ -7,6 +7,10 @@ const nextConfig = {
         hostname: '*.googleusercontent.com',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'dawid-buymeacoffee.s3.amazonaws.com',
+      }
     ],
   },
 };
