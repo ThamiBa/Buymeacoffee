@@ -5,6 +5,7 @@ import UploadButton from "./UploadButton";
 import { useState } from "react";
 import { ProfileInfo } from "@/models/ProfileInfo";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 type Props = {
     profileInfo: ProfileInfo|null;
@@ -16,13 +17,23 @@ export default function ProfilInfoForm({profileInfo}: Props) {
     const [avatarUrl, setAvatarUrl] = useState(profileInfo?.avatarUrl);
 
     async function handleFormActions(formData: FormData) {
-        const result = await saveProfile(formData);
-        console.log(result);
-    }
+        const savePromise = new Promise(async (resolve, reject) => {
+            const result = await saveProfile(formData);
+            resolve(result);
+        });
 
+        await toast.promise(
+            savePromise,
+             {
+               loading: 'Saving...',
+               success: <b>Profile saved!</b>,
+               error: <b>Could not save.</b>,
+             }
+           );
+    }
     return (
         <form action={handleFormActions}>
-         <div className="relative border bg-gray-100 rounded-lg h-48 p-4">
+         <div className="relative border bg-gray-100 rounded-lg h-48 mb-4">
             <Image
             src={coverUrl || ''}
             alt="cover image"
@@ -30,46 +41,46 @@ export default function ProfilInfoForm({profileInfo}: Props) {
             height={1024}
             className="w-full h-48 object-cover object-center rounded-lg"
             />
-                <div className="relative border bg-gray-100 size-24 rounded-full">
-                    <div className="rounded-full size-24 overflow-hidden">
-                        <Image
-                        src={avatarUrl || ''} 
-                        alt="avatar" 
-                        width={120} 
-                        height={120}
-                        />
-                    </div>
-                    
-                    <div className="absolute bottom-0 right-0">
-                        <UploadButton onUploadComplete={setAvatarUrl}/>
-                    </div>
-                    
-                    <input type="hidden" name="avatarUrl" value={avatarUrl}/>
+            <div className="absolute left-4 -bottom-4 z-10 border bg-gray-100 size-24 rounded-lg">
+                <div className="rounded-lg size-24 overflow-hidden">
+                    <Image
+                    src={avatarUrl || ''} 
+                    alt="avatar" 
+                    width={120} 
+                    height={120}
+                    />
+                </div> 
+                <div className="absolute -bottom-2 -right-2">
+                    <UploadButton onUploadComplete={setAvatarUrl}/>
                 </div>
-                <div>
-                    cover image
+                <input type="hidden" name="avatarUrl" value={avatarUrl}/>
+                </div>
+                <div className="absolute right-2 bottom-2">
                     <UploadButton onUploadComplete={setCoverUrl}/>
                     <input type="hidden" name="coverUrl" value={coverUrl}/>
                 </div>
             </div>
+            <div className="grid grid-cols-2 gap-2">
             <div>
-                <label className="block mt-4" htmlFor="">username</label>
+                <label className="input-label" htmlFor="">username</label>
                 <input 
                     defaultValue={profileInfo?.username}
                     name="username" 
                     id="usernameIn" 
-                    type="text" placeholder="username" />
+                    type="text" placeholder="username"/>
+                
             </div>
             <div>
-                <label className="block mt-4" htmlFor="">display name</label>
+                <label className="input-label" htmlFor="">display name</label>
                 <input 
                     defaultValue={profileInfo?.displayName}
                     name="displayName" 
                     id="displayNameIn" 
                     type="text" placeholder="display name" />
             </div>
+            </div>
             <div>
-                <label className="block mt-4" htmlFor="">bio</label>
+                <label className="input-label" htmlFor="">bio</label>
                 <textarea 
                     defaultValue={profileInfo?.bio}
                     id="bioIn" 
